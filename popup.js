@@ -1,10 +1,18 @@
-window.onload = () => {
-    chrome.tabs.executeScript({
+window.onload = function() {
+    chrome.tabs.executeScript( {
         code: "window.getSelection().toString();"
-    }, (selection) => {
+    }, function(selection) {
         chrome.runtime.sendMessage({selection: selection[0]}, 
-            (response) => {
-                document.getElementById("output").innerHTML = null;
+            function(response) {
+                document.getElementById("output").innerHTML = response.clips;
             });
+    });
+
+    var text = document.getElementById("output");
+
+    text.addEventListener("click", function(e) {
+        chrome.runtime.sendMessage({empty: "clear"}, function(response) {
+            text.innerHTML = response.clips;
+        })
     });
 };
